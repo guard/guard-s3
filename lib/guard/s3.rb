@@ -20,9 +20,9 @@ module ::Guard
         :secret_access_key => options[:secret_access_key]
       )
       @bucket         = options[:bucket]
-      @s3_permissions = :public_read
+      @s3_permissions = options[:s3_permissions]
       @debug          = true
-      @pwd            = Dir.pwd
+      @pwd            = watchdir || Dir.pwd
     end
         
     def run_on_change(paths)
@@ -32,9 +32,8 @@ module ::Guard
           if exists?(file)
             log "Nothing uploaded. #{file} already exists!"
           else
-            log "Syncing #{path}"
-            S3Object.store(path, open(file), @bucket) 
-            #S3Object.store(file, open(file), @bucket, {:content_type => file.content_type.to_s.strip, :access => @s3_permissions}) 
+            log "Uploading #{path}"
+            S3Object.store(path, open(file), @bucket, {:access => @s3_permissions}) 
           end
         rescue Exception => e
           log e.message
@@ -57,5 +56,9 @@ module ::Guard
       puts "[#{Time.now}] #{msg}"
     end
 
+    def watchdir
+      # TODO: Nicer way to detect Guard watching a directory explicitly?
+      ::Guard::Dsl.class_variable_get(:@@options).watchdir
+    end
   end
 end
