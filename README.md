@@ -6,17 +6,18 @@ guard-s3 is a simple guard library that syncs local directories with S3 as files
 
 This is a sample Guardfile that will automatically upload all files in the Guard *watchdir* directory into the specified s3 bucket. By default, *watchdir* is the directory from which guard was called, but it can be specified using the `--watchdir/-w` parameter.  See the [guard main documentation for details](https://github.com/guard/guard#guard----).
 
-    opts = {
-      :access_key_id      => 'ACCESS_KEY_ID_XXXXXX',
-      :secret_access_key  => 'SECRET_ACCESS_KEY_XXXXXXXXXXXXXXXXXXXXXX',
-      :bucket             => "mybucket",
-      :s3_permissions     => :public_read
-    }
-    
-    guard 's3', opts do
-      watch(/.*/)
-    end
+```ruby
+opts = {
+  :access_key_id      => 'ACCESS_KEY_ID_XXXXXX',
+  :secret_access_key  => 'SECRET_ACCESS_KEY_XXXXXXXXXXXXXXXXXXXXXX',
+  :bucket             => "mybucket",
+  :s3_permissions     => :public_read
+}
 
+guard 's3', opts do
+  watch(/.*/)
+end
+```
  
 
 # Dependencies
